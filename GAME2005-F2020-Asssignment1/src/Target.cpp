@@ -39,9 +39,19 @@ void Target::clean()
 {
 }
 
+void Target::doThrow()
+{
+	getTransform()->position = throwPos;
+	getRigidBody()->velocity = throwSpeed;
+}
+
 void Target::m_move()
 {
-	getTransform()->position = getTransform()->position + getRigidBody()->velocity * 5.0f;
+	float deltaTime = 1.0f / 60.0f;
+	float pixelPerMeter = 0.1f;
+	getRigidBody()->acceleration += glm::vec2(0, 9.8f);//external forces, gravity
+	getRigidBody()->velocity += getRigidBody()->acceleration * deltaTime;
+	getTransform()->position += getRigidBody()->velocity * 5.0f * deltaTime * pixelPerMeter;
 }
 
 void Target::m_checkBounds()

@@ -17,13 +17,14 @@ PlayScene::~PlayScene()
 
 void PlayScene::draw()
 {
-	if(EventManager::Instance().isIMGUIActive())
+	if (EventManager::Instance().isIMGUIActive())
 	{
 		GUI_Function();
 	}
-
 	drawDisplayList();
+
 	SDL_SetRenderDrawColor(Renderer::Instance()->getRenderer(), 255, 255, 255, 255);
+
 }
 
 void PlayScene::update()
@@ -116,6 +117,9 @@ void PlayScene::handleEvents()
 
 void PlayScene::start()
 {
+	//Background Load into RAM
+	
+
 	// Set GUI Title
 	m_guiTitle = "Play Scene";
 	
@@ -127,6 +131,10 @@ void PlayScene::start()
 	m_pPlayer = new Player();
 	addChild(m_pPlayer);
 	m_playerFacingRight = true;
+
+	//Ball
+	m_pBall = new Target();
+	addChild(m_pBall);
 
 	// Back Button
 	m_pBackButton = new Button("../Assets/textures/backButton.png", "backButton", BACK_BUTTON);
@@ -186,21 +194,38 @@ void PlayScene::GUI_Function() const
 	
 	ImGui::Begin("Your Window Title Goes Here", NULL, ImGuiWindowFlags_AlwaysAutoResize | ImGuiWindowFlags_MenuBar);
 
-	if(ImGui::Button("My Button"))
+	if(ImGui::Button("Throw"))
 	{
-		std::cout << "My Button Pressed" << std::endl;
+		m_pBall->doThrow();
 	}
+	
 
+	
+
+	static float xPos = 400.0f;
+	if (ImGui::SliderFloat("Player X Position", &xPos, 0, Config::SCREEN_WIDTH)){
+		m_pPlayer->getTransform()->position = glm::vec2(xPos, 300);
+		m_pBall->getTransform()->position = glm::vec2(xPos, 300);
+	}
 	ImGui::Separator();
-
-	static float float3[3] = { 0.0f, 1.0f, 1.5f };
-	if(ImGui::SliderFloat3("My Slider", float3, 0.0f, 2.0f))
-	{
-		std::cout << float3[0] << std::endl;
-		std::cout << float3[1] << std::endl;
-		std::cout << float3[2] << std::endl;
-		std::cout << "---------------------------\n";
+	
+	static float xThrowSpeed = 0.0f;
+	if (ImGui::InputFloat("Throw Speed X", &xThrowSpeed)) {
+		m_pBall->throwSpeed.x = xThrowSpeed;
 	}
+	static float yThrowSpeed = 0.0f;
+	if (ImGui::InputFloat("Throw Speed Y", &yThrowSpeed)) {
+		m_pBall->throwSpeed.y = yThrowSpeed;
+	}
+	
+	//static float float3[3] = { 0.0f, 1.0f, 1.5f };
+	//if(ImGui::SliderFloat3("My Slider", float3, 0.0f, 2.0f))
+	//{
+	//	std::cout << float3[0] << std::endl;
+	//	std::cout << float3[1] << std::endl;
+	//	std::cout << float3[2] << std::endl;
+	//	std::cout << "---------------------------\n";
+	//}
 	
 	ImGui::End();
 

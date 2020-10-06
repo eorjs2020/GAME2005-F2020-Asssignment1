@@ -14,6 +14,11 @@ public:
 	virtual void update() override;
 	virtual void clean() override;
 
+	glm::vec2 throwPos;
+	glm::vec2 throwSpeed;
+
+	void doThrow();
+
 private:
 	void m_move();
 	void m_checkBounds();
