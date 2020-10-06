@@ -15,7 +15,7 @@ public:
 	virtual void draw() override;
 	virtual void update() override;
 	virtual void clean() override;
-
+	
 	void setAnimationState(PlaneAnimationState);
 	bool isColliding(GameObject*);
 	float getDistance(GameObject*);
@@ -23,6 +23,7 @@ private:
 	void m_buildAnimations();
 	bool collision = false;
 	PlaneAnimationState m_currentAnimationState;
+	
 };
 
 #endif /* defined (__PLANE__) */

@@ -16,7 +16,7 @@ public:
 
 	glm::vec2 throwPos;
 	glm::vec2 throwSpeed;
-
+	bool m_bThrow = false;
 	void doThrow();
 	void reset();
 private:

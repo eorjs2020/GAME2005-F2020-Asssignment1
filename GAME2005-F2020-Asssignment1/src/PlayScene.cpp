@@ -30,20 +30,22 @@ void PlayScene::draw()
 
 void PlayScene::update()
 {
-	
-	
+	if (m_pPlaneSprite->getAnimation("explosion").current_frame == 6){
+		m_pPlaneSprite->getAnimation("explosion").current_frame = 0;
+		m_pPlaneSprite->setAnimationState(PLANE_IDLE);
+		m_pPlaneSprite->getRigidBody()->isColliding = false;		
+	}
+
 	std::string labelText = "";
 	if (m_pPlaneSprite->isColliding(m_pBall)) {
 		labelText = "HIT";
-		
+		m_pBall->getRigidBody()->isColliding = true;
+		m_pPlaneSprite->setAnimationState(PLANE_EXPLOSION);
 	}
 	else {
 		labelText = "Distance = " + std::to_string(m_pPlaneSprite->getDistance(m_pBall));
 	}
-	if (m_pPlaneSprite->getRigidBody()->isColliding)
-	{
-		m_pPlaneSprite->setAnimationState(PLANE_EXPLOSION);
-	}
+
 	updateDisplayList();
 
 	m_pDistanceLabel->setText(labelText);
@@ -160,45 +162,45 @@ void PlayScene::start()
 	addChild(m_pBall);
 
 	// Back Button
-	m_pBackButton = new Button("../Assets/textures/backButton.png", "backButton", BACK_BUTTON);
-	m_pBackButton->getTransform()->position = glm::vec2(300.0f, 400.0f);
-	m_pBackButton->addEventListener(CLICK, [&]()-> void
-	{
-		m_pBackButton->setActive(false);
-		TheGame::Instance()->changeSceneState(START_SCENE);
-	});
+	//m_pBackButton = new Button("../Assets/textures/backButton.png", "backButton", BACK_BUTTON);
+	//m_pBackButton->getTransform()->position = glm::vec2(300.0f, 400.0f);
+	//m_pBackButton->addEventListener(CLICK, [&]()-> void
+	//{
+	//	m_pBackButton->setActive(false);
+	//	TheGame::Instance()->changeSceneState(START_SCENE);
+	//});
 
-	m_pBackButton->addEventListener(MOUSE_OVER, [&]()->void
-	{
-		m_pBackButton->setAlpha(128);
-	});
+	//m_pBackButton->addEventListener(MOUSE_OVER, [&]()->void
+	//{
+	//	m_pBackButton->setAlpha(128);
+	//});
 
-	m_pBackButton->addEventListener(MOUSE_OUT, [&]()->void
-	{
-		m_pBackButton->setAlpha(255);
-	});
-	addChild(m_pBackButton);
+	//m_pBackButton->addEventListener(MOUSE_OUT, [&]()->void
+	//{
+	//	m_pBackButton->setAlpha(255);
+	//});
+	//addChild(m_pBackButton);
 
-	// Next Button
-	m_pNextButton = new Button("../Assets/textures/nextButton.png", "nextButton", NEXT_BUTTON);
-	m_pNextButton->getTransform()->position = glm::vec2(500.0f, 400.0f);
-	m_pNextButton->addEventListener(CLICK, [&]()-> void
-	{
-		m_pNextButton->setActive(false);
-		TheGame::Instance()->changeSceneState(END_SCENE);
-	});
+	//// Next Button
+	//m_pNextButton = new Button("../Assets/textures/nextButton.png", "nextButton", NEXT_BUTTON);
+	//m_pNextButton->getTransform()->position = glm::vec2(500.0f, 400.0f);
+	//m_pNextButton->addEventListener(CLICK, [&]()-> void
+	//{
+	//	m_pNextButton->setActive(false);
+	//	TheGame::Instance()->changeSceneState(END_SCENE);
+	//});
 
-	m_pNextButton->addEventListener(MOUSE_OVER, [&]()->void
-	{
-		m_pNextButton->setAlpha(128);
-	});
+	//m_pNextButton->addEventListener(MOUSE_OVER, [&]()->void
+	//{
+	//	m_pNextButton->setAlpha(128);
+	//});
 
-	m_pNextButton->addEventListener(MOUSE_OUT, [&]()->void
-	{
-		m_pNextButton->setAlpha(255);
-	});
+	//m_pNextButton->addEventListener(MOUSE_OUT, [&]()->void
+	//{
+	//	m_pNextButton->setAlpha(255);
+	//});
 
-	addChild(m_pNextButton);
+	//addChild(m_pNextButton);
 
 	/* Instructions Label */
 	m_pInstructionsLabel = new Label("Press the backtick (`) character to toggle Debug View", "Consolas");
@@ -216,13 +218,18 @@ void PlayScene::GUI_Function() const
 	//ImGui::ShowDemoWindow();
 	
 	ImGui::Begin("Your Window Title Goes Here", NULL, ImGuiWindowFlags_AlwaysAutoResize | ImGuiWindowFlags_MenuBar);
-
-	if(ImGui::Button("Throw"))
+	if (!m_pBall->m_bThrow)
 	{
-		m_pBall->throwPos = m_pPlayer->getTransform()->position;
-		m_pBall->doThrow();
+		if (ImGui::Button("Throw"))
+		{
+			m_pBall->throwPos = m_pPlayer->getTransform()->position;
+			m_pBall->doThrow();
+			m_pBall->m_bThrow = true;
+		}
+		
 	}
-	
+	else
+		ImGui::Button("Wait");
 
 	
 
@@ -234,7 +241,7 @@ void PlayScene::GUI_Function() const
 	ImGui::Separator();
 	
 	static float xThrowSpeed = 0.0f;
-	if (ImGui::SliderFloat("Velocity", &xThrowSpeed, 0, 400)) {
+	if (ImGui::SliderFloat("Velocity", &xThrowSpeed, 0, 800)) {
 		m_pBall->throwSpeed.x = xThrowSpeed;
 	}
 	/*static float xThrowSpeed = 0.0f;

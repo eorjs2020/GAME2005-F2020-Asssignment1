@@ -16,7 +16,7 @@ Plane::Plane()
 	// set frame height
 	setHeight(65);
 
-	getTransform()->position = glm::vec2(800.0f - 65.0f, 300.0f);
+	getTransform()->position = glm::vec2(800.0f - 65.0f, 600.0f - 65/2);
 	getRigidBody()->velocity = glm::vec2(0.0f, 0.0f);
 	getRigidBody()->acceleration = glm::vec2(0.0f, 0.0f);
 	getRigidBody()->isColliding = false;
@@ -33,18 +33,9 @@ void Plane::draw()
 	// alias for x and y
 	const auto x = getTransform()->position.x;
 	const auto y = getTransform()->position.y;
-
+	
+	
 	// draw the plane sprite with simple propeller animation
-	TextureManager::Instance()->playAnimation(
-		"spritesheet", getAnimation("plane"),
-		x, y, 0.5f, 0, 255, true);
-}
-
-void Plane::update()
-{
-	const auto x = getTransform()->position.x;
-	const auto y = getTransform()->position.y;
-
 	switch (m_currentAnimationState)
 	{
 	case PLANE_IDLE:
@@ -55,10 +46,15 @@ void Plane::update()
 		TextureManager::Instance()->playAnimation("spritesheet", getAnimation("explosion"),
 			x, y, 0.12f, 0, 255, true);
 		break;
-	
+
 	default:
 		break;
 	}
+}
+
+void Plane::update()
+{
+	
 
 }
 
@@ -75,7 +71,7 @@ bool Plane::isColliding(GameObject* pOther)
 {
 	float myRadius = getWidth() * 0.5f;
 	float otherRadius = pOther->getWidth() * 0.5f;
-	getDistance(pOther) <= myRadius + otherRadius ? getRigidBody()->isColliding = true : getRigidBody()->isColliding = false;
+	
 	return (getDistance(pOther) <= myRadius + otherRadius);
 }
 
