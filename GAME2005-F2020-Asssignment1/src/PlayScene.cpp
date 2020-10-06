@@ -235,7 +235,7 @@ void PlayScene::GUI_Function() const
 
 	static float xPos = 400.0f;
 	if (ImGui::SliderFloat("EnemyDistance", &xPos, 485, Config::SCREEN_WIDTH)){
-		m_pPlaneSprite->getTransform()->position = glm::vec2(xPos, 300);
+		m_pPlaneSprite->getTransform()->position = glm::vec2(xPos, 600.0f - 65 / 2);
 		
 	}
 	ImGui::Separator();

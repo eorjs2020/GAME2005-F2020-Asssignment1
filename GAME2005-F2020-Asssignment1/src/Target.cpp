@@ -37,10 +37,7 @@ void Target::update()
 		if (getRigidBody()->isColliding)
 		{
 			reset();
-			//getTransform()->position = glm::vec2(26.5f, 600.0f - 58 / 2);
-			getRigidBody()->isColliding = false;
-			//getRigidBody()->acceleration = glm::vec2(0.0f, 0.0f);
-			m_bThrow = false;
+		
 		}
 		m_move();
 		m_checkBounds();
@@ -53,26 +50,30 @@ void Target::clean()
 
 void Target::doThrow()
 {
-	getRigidBody()->acceleration += glm::vec2(0, 9.8f);//external forces, gravity
+	getRigidBody()->acceleration += glm::vec2(0.0f, 9.8f);
 	getTransform()->position = throwPos;
-	getRigidBody()->velocity.x += throwSpeed * cos(angle);
-	getRigidBody()->velocity.y += throwSpeed * sin(angle);
+	getRigidBody()->velocity.x += throwSpeed * cos(angle * (3.14f/180));
+	getRigidBody()->velocity.y += -throwSpeed * sin(angle * (3.14f / 180));
 }
 
 void Target::reset()
 {
+
 	getTransform()->position = glm::vec2(26.5f, 600.0f - 58 / 2);
 	getRigidBody()->acceleration = glm::vec2(0.0f, 0.0f);
 	getRigidBody()->velocity = glm::vec2(0.0f, 0.0f);
+	getRigidBody()->isColliding = false;
+	m_bThrow = false;
 }
 
 void Target::m_move()
 {
+	glm::vec2 gravity = glm::vec2(0.0f, 9.8f);
 	float deltaTime = 1.0f / 60.0f;
 	float pixelPerMeter = 1.0f;
-	
-	getRigidBody()->velocity += getRigidBody()->acceleration * deltaTime;
+	getRigidBody()->velocity += getRigidBody()->acceleration  * deltaTime;
 	getTransform()->position += getRigidBody()->velocity * deltaTime * pixelPerMeter;
+	std::cout << cos(angle * (3.14f / 180)) << "  " << sin(angle * (3.14f / 180)) << std::endl;
 }
 
 void Target::m_checkBounds()
