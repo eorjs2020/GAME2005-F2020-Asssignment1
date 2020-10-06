@@ -30,7 +30,23 @@ void PlayScene::draw()
 
 void PlayScene::update()
 {
+	
+	
+	std::string labelText = "";
+	if (m_pPlaneSprite->isColliding(m_pBall)) {
+		labelText = "HIT";
+		
+	}
+	else {
+		labelText = "Distance = " + std::to_string(m_pPlaneSprite->getDistance(m_pBall));
+	}
+	if (m_pPlaneSprite->getRigidBody()->isColliding)
+	{
+		m_pPlaneSprite->setAnimationState(PLANE_EXPLOSION);
+	}
 	updateDisplayList();
+
+	m_pDistanceLabel->setText(labelText);
 }
 
 void PlayScene::clean()
@@ -41,7 +57,7 @@ void PlayScene::clean()
 void PlayScene::handleEvents()
 {
 	EventManager::Instance().update();
-
+	
 	// handle player movement with GameController
 	if (SDL_NumJoysticks() > 0)
 	{
@@ -132,6 +148,12 @@ void PlayScene::start()
 	m_pPlayer = new Player();
 	addChild(m_pPlayer);
 	m_playerFacingRight = true;
+
+	//Label for Hit
+	const SDL_Color blue = { 0, 0, 255, 255 };
+	m_pDistanceLabel = new Label("Distance", "Consolas", 40, blue, glm::vec2(400.0f, 40.0f));
+	m_pDistanceLabel->setParent(this);
+	addChild(m_pDistanceLabel);
 
 	//Ball
 	m_pBall = new Target();

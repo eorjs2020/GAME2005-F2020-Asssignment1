@@ -42,7 +42,7 @@ void Target::clean()
 
 void Target::doThrow()
 {
-	getRigidBody()->acceleration += glm::vec2(0, 9.8f);//external forces, gravity
+	//getRigidBody()->acceleration += glm::vec2(0, 9.8f);//external forces, gravity
 	getTransform()->position = throwPos;
 	getRigidBody()->velocity = throwSpeed;
 }

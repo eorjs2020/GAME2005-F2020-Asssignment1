@@ -35,7 +35,7 @@ private:
 	Player* m_pPlayer;
 	Target* m_pBall;
 	bool m_playerFacingRight;
-
+	Label* m_pDistanceLabel;
 	// UI Items
 	Button* m_pBackButton;
 	Button* m_pNextButton;
