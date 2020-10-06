@@ -9,11 +9,12 @@ Target::Target()
 	const auto size = TextureManager::Instance()->getTextureSize("circle");
 	setWidth(size.x);
 	setHeight(size.y);
-	getTransform()->position = glm::vec2(100.0f, 100.0f);
+	getTransform()->position = glm::vec2(26.5f, 300.0f);
 	getRigidBody()->velocity = glm::vec2(0, 0);
 	getRigidBody()->isColliding = false;
 
 	setType(TARGET);
+	
 }
 
 Target::~Target()
@@ -41,17 +42,24 @@ void Target::clean()
 
 void Target::doThrow()
 {
+	getRigidBody()->acceleration += glm::vec2(0, 9.8f);//external forces, gravity
 	getTransform()->position = throwPos;
 	getRigidBody()->velocity = throwSpeed;
+}
+
+void Target::reset()
+{
+	getTransform()->position = glm::vec2(26.5f, 300.0f);
+	getRigidBody()->velocity = glm::vec2(0, 0);
 }
 
 void Target::m_move()
 {
 	float deltaTime = 1.0f / 60.0f;
-	float pixelPerMeter = 0.1f;
-	getRigidBody()->acceleration += glm::vec2(0, 9.8f);//external forces, gravity
+	float pixelPerMeter = 1.0f;
+	
 	getRigidBody()->velocity += getRigidBody()->acceleration * deltaTime;
-	getTransform()->position += getRigidBody()->velocity * 5.0f * deltaTime * pixelPerMeter;
+	getTransform()->position += getRigidBody()->velocity * deltaTime * pixelPerMeter;
 }
 
 void Target::m_checkBounds()

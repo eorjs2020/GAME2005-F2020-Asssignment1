@@ -18,7 +18,7 @@ public:
 	glm::vec2 throwSpeed;
 
 	void doThrow();
-
+	void reset();
 private:
 	void m_move();
 	void m_checkBounds();

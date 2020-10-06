@@ -17,13 +17,14 @@ PlayScene::~PlayScene()
 
 void PlayScene::draw()
 {
+	TextureManager::Instance()->draw("background", 400, 300, 0, 255, true);
+	drawDisplayList();
+
+	SDL_SetRenderDrawColor(Renderer::Instance()->getRenderer(), 255, 255, 255, 255);
 	if (EventManager::Instance().isIMGUIActive())
 	{
 		GUI_Function();
 	}
-	drawDisplayList();
-
-	SDL_SetRenderDrawColor(Renderer::Instance()->getRenderer(), 255, 255, 255, 255);
 
 }
 
@@ -118,8 +119,8 @@ void PlayScene::handleEvents()
 void PlayScene::start()
 {
 	//Background Load into RAM
+	TextureManager::Instance()->load("../Assets/textures/startBackground.png", "background");
 	
-
 	// Set GUI Title
 	m_guiTitle = "Play Scene";
 	
@@ -196,6 +197,7 @@ void PlayScene::GUI_Function() const
 
 	if(ImGui::Button("Throw"))
 	{
+		m_pBall->throwPos = m_pPlayer->getTransform()->position;
 		m_pBall->doThrow();
 	}
 	
@@ -203,21 +205,21 @@ void PlayScene::GUI_Function() const
 	
 
 	static float xPos = 400.0f;
-	if (ImGui::SliderFloat("Player X Position", &xPos, 0, Config::SCREEN_WIDTH)){
-		m_pPlayer->getTransform()->position = glm::vec2(xPos, 300);
-		m_pBall->getTransform()->position = glm::vec2(xPos, 300);
+	if (ImGui::SliderFloat("EnemyDistance", &xPos, 485, Config::SCREEN_WIDTH)){
+		m_pPlaneSprite->getTransform()->position = glm::vec2(xPos, 300);
+		
 	}
 	ImGui::Separator();
 	
 	static float xThrowSpeed = 0.0f;
-	if (ImGui::InputFloat("Throw Speed X", &xThrowSpeed)) {
+	if (ImGui::SliderFloat("Velocity", &xThrowSpeed, 0, 400)) {
 		m_pBall->throwSpeed.x = xThrowSpeed;
 	}
-	static float yThrowSpeed = 0.0f;
-	if (ImGui::InputFloat("Throw Speed Y", &yThrowSpeed)) {
-		m_pBall->throwSpeed.y = yThrowSpeed;
-	}
-	
+	/*static float xThrowSpeed = 0.0f;
+	if (ImGui::SliderFloat("Radian", &xThrowSpeed, 0, 400)) {
+		m_pBall->throwSpeed.x = xThrowSpeed;
+	}*/
+
 	//static float float3[3] = { 0.0f, 1.0f, 1.5f };
 	//if(ImGui::SliderFloat3("My Slider", float3, 0.0f, 2.0f))
 	//{
@@ -228,6 +230,7 @@ void PlayScene::GUI_Function() const
 	//}
 	
 	ImGui::End();
+	ImGui::EndFrame();
 
 	// Don't Remove this
 	ImGui::Render();
