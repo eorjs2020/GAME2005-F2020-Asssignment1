@@ -217,7 +217,7 @@ void PlayScene::GUI_Function() const
 	// See examples by uncommenting the following - also look at imgui_demo.cpp in the IMGUI filter
 	//ImGui::ShowDemoWindow();
 	
-	ImGui::Begin("Your Window Title Goes Here", NULL, ImGuiWindowFlags_AlwaysAutoResize | ImGuiWindowFlags_MenuBar);
+	ImGui::Begin("Change Variables", NULL, ImGuiWindowFlags_AlwaysAutoResize | ImGuiWindowFlags_MenuBar);
 	if (!m_pBall->m_bThrow)
 	{
 		if (ImGui::Button("Throw"))
@@ -242,7 +242,12 @@ void PlayScene::GUI_Function() const
 	
 	static float xThrowSpeed = 0.0f;
 	if (ImGui::SliderFloat("Velocity", &xThrowSpeed, 0, 800)) {
-		m_pBall->throwSpeed.x = xThrowSpeed;
+		m_pBall->throwSpeed = xThrowSpeed;
+	}
+
+	static float angle = 0.0f;
+	if (ImGui::SliderFloat("Angle", &angle, 0, 90)) {
+		m_pBall->angle = angle;
 	}
 	/*static float xThrowSpeed = 0.0f;
 	if (ImGui::SliderFloat("Radian", &xThrowSpeed, 0, 400)) {

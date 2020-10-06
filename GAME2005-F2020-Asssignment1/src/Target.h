@@ -15,7 +15,8 @@ public:
 	virtual void clean() override;
 
 	glm::vec2 throwPos;
-	glm::vec2 throwSpeed;
+	float throwSpeed, angle;
+
 	bool m_bThrow = false;
 	void doThrow();
 	void reset();

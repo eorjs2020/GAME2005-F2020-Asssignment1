@@ -36,9 +36,10 @@ void Target::update()
 	{
 		if (getRigidBody()->isColliding)
 		{
-			getTransform()->position = glm::vec2(26.5f, 600.0f - 58 / 2);
+			reset();
+			//getTransform()->position = glm::vec2(26.5f, 600.0f - 58 / 2);
 			getRigidBody()->isColliding = false;
-			getRigidBody()->acceleration = glm::vec2(0.0f, 0.0f);
+			//getRigidBody()->acceleration = glm::vec2(0.0f, 0.0f);
 			m_bThrow = false;
 		}
 		m_move();
@@ -54,7 +55,8 @@ void Target::doThrow()
 {
 	getRigidBody()->acceleration += glm::vec2(0, 9.8f);//external forces, gravity
 	getTransform()->position = throwPos;
-	getRigidBody()->velocity = throwSpeed;
+	getRigidBody()->velocity.x += throwSpeed * cos(angle);
+	getRigidBody()->velocity.y += throwSpeed * sin(angle);
 }
 
 void Target::reset()
