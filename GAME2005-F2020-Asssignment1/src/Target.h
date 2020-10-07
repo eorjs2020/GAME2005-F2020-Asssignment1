@@ -3,6 +3,7 @@
 #define __TARGET__
 
 #include "DisplayObject.h"
+#include "Util.h"
 
 class Target final : public DisplayObject {
 public:
@@ -15,11 +16,13 @@ public:
 	virtual void clean() override;
 
 	glm::vec2 throwPos;
-	float throwSpeed, angle;
+	float throwSpeed, angle, mass, m_force;
 
 	bool m_bThrow = false;
 	void doThrow();
 	void reset();
+	void force();
+	float getForce() { return m_force; };
 private:
 	void m_move();
 	void m_checkBounds();

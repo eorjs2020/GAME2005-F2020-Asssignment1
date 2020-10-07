@@ -6,6 +6,7 @@
 #include "imgui.h"
 #include "imgui_sdl.h"
 #include "Renderer.h"
+#include "Util.h"
 
 PlayScene::PlayScene()
 {
@@ -249,6 +250,31 @@ void PlayScene::GUI_Function() const
 	if (ImGui::SliderFloat("Angle", &angle, 0, 90)) {
 		m_pBall->angle = angle;
 	}
+
+	static float mass = 0.0f;
+	if (ImGui::SliderFloat("Mass", &mass, 0, 90)) {
+		m_pBall->mass = mass;
+	}
+	double velx = m_pBall->getRigidBody()->velocity.x,
+		vely = m_pBall->getRigidBody()->velocity.y,
+		vel = Util::magnitude(m_pBall->getRigidBody()->velocity),
+		disx = m_pBall->getTransform()->position.x,
+		disy = m_pBall->getTransform()->position.y,
+		dis = m_pPlaneSprite->getDistance(m_pBall),
+		accx = m_pBall->getRigidBody()->acceleration.x,
+		accy = m_pBall->getRigidBody()->acceleration.y,
+		acc = Util::magnitude(m_pBall->getRigidBody()->acceleration),
+		force = m_pBall->m_force;
+		;
+	ImGui::Text("Velocity on x-axis = %.2f m/s", velx);
+	ImGui::Text("Velocity on y-axis = %.2f m/s", -vely);
+	ImGui::Text("Velocity = %.2f m/s", vel);
+	ImGui::Text("Distance between ball and plane %.2f m", dis);
+	ImGui::Text("Acceleration on x-axis %.2f m/s²", accx);
+	ImGui::Text("Acceleration on y-axis %.2f m/s²", accy);
+	ImGui::Text("Acceleration %.2f m/s²", accy);
+	ImGui::Text("Force %.2f N", force);
+
 	/*static float xThrowSpeed = 0.0f;
 	if (ImGui::SliderFloat("Radian", &xThrowSpeed, 0, 400)) {
 		m_pBall->throwSpeed.x = xThrowSpeed;

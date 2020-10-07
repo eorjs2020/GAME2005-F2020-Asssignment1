@@ -2,6 +2,7 @@
 #include "TextureManager.h"
 
 
+
 Target::Target()
 {
 	TextureManager::Instance()->load("../Assets/textures/Circle.png","circle");
@@ -42,6 +43,7 @@ void Target::update()
 		m_move();
 		m_checkBounds();
 	}
+	force();
 }
 
 void Target::clean()
@@ -64,6 +66,11 @@ void Target::reset()
 	getRigidBody()->velocity = glm::vec2(0.0f, 0.0f);
 	getRigidBody()->isColliding = false;
 	m_bThrow = false;
+}
+
+void Target::force()
+{
+	m_force = sqrt(Util::magnitude(getRigidBody()->acceleration) * mass);
 }
 
 void Target::m_move()
