@@ -37,7 +37,7 @@ void PlayScene::update()
 		m_pPlaneSprite->getRigidBody()->isColliding = false;		
 	}
 
-	/*std::string labelText = "";
+	std::string labelText = "";
 	if (m_pPlaneSprite->isColliding(m_pBall)) {
 		labelText = "HIT";
 		m_pBall->getRigidBody()->isColliding = true;
@@ -45,7 +45,7 @@ void PlayScene::update()
 	}
 	else {
 		labelText = "Distance = " + std::to_string(m_pPlaneSprite->getDistance(m_pBall));
-	}*/
+	}
 
 	updateDisplayList();
 
@@ -137,9 +137,7 @@ void PlayScene::handleEvents()
 
 void PlayScene::start()
 {
-	//Background Load into RAM
 	TextureManager::Instance()->load("../Assets/textures/startBackground.png", "background");
-	
 	// Set GUI Title
 	m_guiTitle = "Play Scene";
 	
@@ -204,7 +202,8 @@ void PlayScene::start()
 	//addChild(m_pNextButton);
 
 	/* Instructions Label */
-	m_pInstructionsLabel = new Label("Press the backtick (`) character to toggle Debug View", "Consolas");
+	const SDL_Color blue = { 0, 0, 255, 255 };
+	m_pInstructionsLabel = new Label("Press the backtick (`) character to toggle Debug View", "Consolas", 20, blue);
 	m_pInstructionsLabel->getTransform()->position = glm::vec2(Config::SCREEN_WIDTH * 0.5f, 500.0f);
 
 	addChild(m_pInstructionsLabel);
@@ -270,9 +269,9 @@ void PlayScene::GUI_Function() const
 	ImGui::Text("Velocity on y-axis = %.2f m/s", -vely);
 	ImGui::Text("Velocity = %.2f m/s", vel);
 	ImGui::Text("Distance between ball and plane %.2f m", dis);
-	ImGui::Text("Acceleration on x-axis %.2f m/s²", accx);
-	ImGui::Text("Acceleration on y-axis %.2f m/s²", accy);
-	ImGui::Text("Acceleration %.2f m/s²", accy);
+	ImGui::Text("Acceleration on x-axis %.2f m/s?", accx);
+	ImGui::Text("Acceleration on y-axis %.2f m/s?", accy);
+	ImGui::Text("Acceleration %.2f m/s?", accy);
 	ImGui::Text("Force %.2f N", force);
 
 	/*static float xThrowSpeed = 0.0f;
