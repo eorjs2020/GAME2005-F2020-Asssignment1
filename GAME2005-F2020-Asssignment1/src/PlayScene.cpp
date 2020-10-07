@@ -37,7 +37,7 @@ void PlayScene::update()
 		m_pPlaneSprite->getRigidBody()->isColliding = false;		
 	}
 
-	std::string labelText = "";
+	/*std::string labelText = "";
 	if (m_pPlaneSprite->isColliding(m_pBall)) {
 		labelText = "HIT";
 		m_pBall->getRigidBody()->isColliding = true;
@@ -45,11 +45,11 @@ void PlayScene::update()
 	}
 	else {
 		labelText = "Distance = " + std::to_string(m_pPlaneSprite->getDistance(m_pBall));
-	}
+	}*/
 
 	updateDisplayList();
 
-	m_pDistanceLabel->setText(labelText);
+	//m_pDistanceLabel->setText(labelText);
 }
 
 void PlayScene::clean()
@@ -152,11 +152,11 @@ void PlayScene::start()
 	addChild(m_pPlayer);
 	m_playerFacingRight = true;
 
-	//Label for Hit
-	const SDL_Color blue = { 0, 0, 255, 255 };
-	m_pDistanceLabel = new Label("Distance", "Consolas", 40, blue, glm::vec2(400.0f, 40.0f));
-	m_pDistanceLabel->setParent(this);
-	addChild(m_pDistanceLabel);
+	////Label for Hit
+	//const SDL_Color blue = { 0, 0, 255, 255 };
+	//m_pDistanceLabel = new Label("Distance", "Consolas", 40, blue, glm::vec2(400.0f, 40.0f));
+	//m_pDistanceLabel->setParent(this);
+	//addChild(m_pDistanceLabel);
 
 	//Ball
 	m_pBall = new Target();
