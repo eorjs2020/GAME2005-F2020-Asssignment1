@@ -252,7 +252,7 @@ void PlayScene::GUI_Function() const
 	}
 
 	static float mass = 0.0f;
-	if (ImGui::SliderFloat("Mass", &mass, 0, 90)) {
+	if (ImGui::SliderFloat("Mass", &mass, 0, 100)) {
 		m_pBall->mass = mass;
 	}
 	double velx = m_pBall->getRigidBody()->velocity.x,

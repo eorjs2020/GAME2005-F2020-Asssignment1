@@ -85,7 +85,7 @@ void Target::m_move()
 
 void Target::m_checkBounds()
 {
-	if (getTransform()->position.x > 810 || getTransform()->position.y > 600 - getWidth() / 2 )
+	if (getTransform()->position.x > 1010 || getTransform()->position.y > 600 - getWidth() / 2 )
 	{
 		getRigidBody()->isColliding = true;
 	}
