@@ -233,26 +233,30 @@ void PlayScene::GUI_Function() const
 
 	
 
-	static float xPos = 400.0f;
-	if (ImGui::SliderFloat("EnemyDistance", &xPos, 485, Config::SCREEN_WIDTH)){
+	static float xPos = 485.0f;
+	if (ImGui::SliderFloat("EnemyDistance", &xPos, 200, Config::SCREEN_WIDTH) - m_pPlaneSprite->getWidth()/ 2){
 		m_pPlaneSprite->getTransform()->position = glm::vec2(xPos, 600.0f - 65 / 2);
 		
 	}
 	ImGui::Separator();
 	
-	static float xThrowSpeed = 0.0f;
+	static float xThrowSpeed = 95.0f;
 	if (ImGui::SliderFloat("Velocity", &xThrowSpeed, 0, 800)) {
 		m_pBall->throwSpeed = xThrowSpeed;
 	}
 
-	static float angle = 0.0f;
+	static float angle = 15.0f;
 	if (ImGui::SliderFloat("Angle", &angle, 0, 90)) {
 		m_pBall->angle = angle;
 	}
 
-	static float mass = 0.0f;
+	static float mass = 2.2f;
 	if (ImGui::SliderFloat("Mass", &mass, 0, 100)) {
 		m_pBall->mass = mass;
+	}
+	static float gravity = m_pBall->gravity;
+	if (ImGui::SliderFloat("Gravity", &gravity, 5.0f, 20)) {
+		m_pBall->gravity = gravity;
 	}
 	double velx = m_pBall->getRigidBody()->velocity.x,
 		vely = m_pBall->getRigidBody()->velocity.y,
@@ -264,7 +268,7 @@ void PlayScene::GUI_Function() const
 		accy = m_pBall->getRigidBody()->acceleration.y,
 		acc = Util::magnitude(m_pBall->getRigidBody()->acceleration),
 		force = m_pBall->m_force;
-		;
+		
 	ImGui::Text("Velocity on x-axis = %.2f m/s", velx);
 	ImGui::Text("Velocity on y-axis = %.2f m/s", -vely);
 	ImGui::Text("Velocity = %.2f m/s", vel);

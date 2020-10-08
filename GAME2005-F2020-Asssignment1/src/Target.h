@@ -16,8 +16,8 @@ public:
 	virtual void clean() override;
 
 	glm::vec2 throwPos;
-	float throwSpeed, angle, mass, m_force;
-
+	float throwSpeed = 95.0f, angle = 15 , mass = 2.2f, m_force;
+	float gravity = 9.8f;
 	bool m_bThrow = false;
 	void doThrow();
 	void reset();

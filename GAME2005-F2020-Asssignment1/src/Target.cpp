@@ -5,7 +5,7 @@
 
 Target::Target()
 {
-	TextureManager::Instance()->load("../Assets/textures/Circle.png","circle");
+	TextureManager::Instance()->load("../Assets/textures/ball.png","circle");
 
 	const auto size = TextureManager::Instance()->getTextureSize("circle");
 	setWidth(size.x);
@@ -52,7 +52,7 @@ void Target::clean()
 
 void Target::doThrow()
 {
-	getRigidBody()->acceleration += glm::vec2(0.0f, 9.8f);
+	getRigidBody()->acceleration += glm::vec2(0.0f, gravity);
 	getTransform()->position = throwPos;
 	getRigidBody()->velocity.x += throwSpeed * cos(angle * (3.14f/180));
 	getRigidBody()->velocity.y += -throwSpeed * sin(angle * (3.14f / 180));
@@ -75,7 +75,6 @@ void Target::force()
 
 void Target::m_move()
 {
-	glm::vec2 gravity = glm::vec2(0.0f, 9.8f);
 	float deltaTime = 1.0f / 60.0f;
 	float pixelPerMeter = 1.0f;
 	getRigidBody()->velocity += getRigidBody()->acceleration  * deltaTime;

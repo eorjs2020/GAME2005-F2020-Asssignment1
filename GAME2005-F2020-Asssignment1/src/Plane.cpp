@@ -9,14 +9,14 @@ Plane::Plane()
 		"spritesheet");
 
 	setSpriteSheet(TextureManager::Instance()->getSpriteSheet("spritesheet"));
-
+	TextureManager::Instance()->load("../Assets/textures/stromtrooper.png", "stromtrooper");
 	// set frame width
-	setWidth(65);
+	setWidth(53);
 
 	// set frame height
-	setHeight(65);
+	setHeight(67);
 
-	getTransform()->position = glm::vec2(800.0f - 65.0f, 600.0f - 65/2);
+	getTransform()->position = glm::vec2(485.0f , 600.0f - 67/2);
 	getRigidBody()->velocity = glm::vec2(0.0f, 0.0f);
 	getRigidBody()->acceleration = glm::vec2(0.0f, 0.0f);
 	getRigidBody()->isColliding = false;
@@ -34,13 +34,15 @@ void Plane::draw()
 	const auto x = getTransform()->position.x;
 	const auto y = getTransform()->position.y;
 	
+	// draw texture
+	
 	
 	// draw the plane sprite with simple propeller animation
+
 	switch (m_currentAnimationState)
 	{
 	case PLANE_IDLE:
-		TextureManager::Instance()->playAnimation("spritesheet", getAnimation("plane"),
-			x, y, 0.12f, 0, 255, true);
+		TextureManager::Instance()->draw("stromtrooper", x, y, 0, 255, true);
 		break;
 	case PLANE_EXPLOSION:
 		TextureManager::Instance()->playAnimation("spritesheet", getAnimation("explosion"),
