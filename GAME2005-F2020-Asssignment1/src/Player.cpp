@@ -3,6 +3,7 @@
 
 Player::Player(): m_currentAnimationState(PLAYER_IDLE_RIGHT)
 {
+	TextureManager::Instance()->load("../Assets/textures/chewbacca.png", "chewbacca");
 	TextureManager::Instance()->loadSpriteSheet(
 		"../Assets/sprites/atlas.txt",
 		"../Assets/sprites/atlas.png", 
@@ -14,15 +15,15 @@ Player::Player(): m_currentAnimationState(PLAYER_IDLE_RIGHT)
 	setWidth(53);
 
 	// set frame height
-	setHeight(58);
-
-	getTransform()->position = glm::vec2(26.5f, 300.0f);
+	setHeight(65);
+	//getTransform()->position = glm::vec2(0.0f, 0.0f );
+	getTransform()->position = glm::vec2(26.5f, 600.0f - 65 /2);
 	getRigidBody()->velocity = glm::vec2(0.0f, 0.0f);
 	getRigidBody()->acceleration = glm::vec2(0.0f, 0.0f);
 	getRigidBody()->isColliding = false;
 	setType(PLAYER);
 
-	m_buildAnimations();
+	//m_buildAnimations();
 }
 
 Player::~Player()
@@ -35,7 +36,7 @@ void Player::draw()
 	const auto y = getTransform()->position.y;
 
 	// draw the player according to animation state
-	switch(m_currentAnimationState)
+	/*switch(m_currentAnimationState)
 	{
 	case PLAYER_IDLE_RIGHT:
 		TextureManager::Instance()->playAnimation("spritesheet", getAnimation("idle"),
@@ -55,7 +56,8 @@ void Player::draw()
 		break;
 	default:
 		break;
-	}
+	}*/
+	TextureManager::Instance()->draw("chewbacca", x, y, 0, 255, true);
 	
 }
 

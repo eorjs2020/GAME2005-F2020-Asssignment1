@@ -6,6 +6,7 @@
 #include "imgui.h"
 #include "imgui_sdl.h"
 #include "Renderer.h"
+#include "Util.h"
 
 PlayScene::PlayScene()
 {
@@ -30,7 +31,25 @@ void PlayScene::draw()
 
 void PlayScene::update()
 {
+	if (m_pPlaneSprite->getAnimation("explosion").current_frame == 6){
+		m_pPlaneSprite->getAnimation("explosion").current_frame = 0;
+		m_pPlaneSprite->setAnimationState(PLANE_IDLE);
+		m_pPlaneSprite->getRigidBody()->isColliding = false;		
+	}
+
+	std::string labelText = "";
+	if (m_pPlaneSprite->isColliding(m_pBall)) {
+		labelText = "HIT";
+		m_pBall->getRigidBody()->isColliding = true;
+		m_pPlaneSprite->setAnimationState(PLANE_EXPLOSION);
+	}
+	else {
+		labelText = "Distance = " + std::to_string(m_pPlaneSprite->getDistance(m_pBall));
+	}
+
 	updateDisplayList();
+
+	//m_pDistanceLabel->setText(labelText);
 }
 
 void PlayScene::clean()
@@ -41,7 +60,7 @@ void PlayScene::clean()
 void PlayScene::handleEvents()
 {
 	EventManager::Instance().update();
-
+	
 	// handle player movement with GameController
 	if (SDL_NumJoysticks() > 0)
 	{
@@ -118,9 +137,7 @@ void PlayScene::handleEvents()
 
 void PlayScene::start()
 {
-	//Background Load into RAM
 	TextureManager::Instance()->load("../Assets/textures/startBackground.png", "background");
-	
 	// Set GUI Title
 	m_guiTitle = "Play Scene";
 	
@@ -133,53 +150,60 @@ void PlayScene::start()
 	addChild(m_pPlayer);
 	m_playerFacingRight = true;
 
+	////Label for Hit
+	//const SDL_Color blue = { 0, 0, 255, 255 };
+	//m_pDistanceLabel = new Label("Distance", "Consolas", 40, blue, glm::vec2(400.0f, 40.0f));
+	//m_pDistanceLabel->setParent(this);
+	//addChild(m_pDistanceLabel);
+
 	//Ball
 	m_pBall = new Target();
 	addChild(m_pBall);
 
 	// Back Button
-	m_pBackButton = new Button("../Assets/textures/backButton.png", "backButton", BACK_BUTTON);
-	m_pBackButton->getTransform()->position = glm::vec2(300.0f, 400.0f);
-	m_pBackButton->addEventListener(CLICK, [&]()-> void
-	{
-		m_pBackButton->setActive(false);
-		TheGame::Instance()->changeSceneState(START_SCENE);
-	});
+	//m_pBackButton = new Button("../Assets/textures/backButton.png", "backButton", BACK_BUTTON);
+	//m_pBackButton->getTransform()->position = glm::vec2(300.0f, 400.0f);
+	//m_pBackButton->addEventListener(CLICK, [&]()-> void
+	//{
+	//	m_pBackButton->setActive(false);
+	//	TheGame::Instance()->changeSceneState(START_SCENE);
+	//});
 
-	m_pBackButton->addEventListener(MOUSE_OVER, [&]()->void
-	{
-		m_pBackButton->setAlpha(128);
-	});
+	//m_pBackButton->addEventListener(MOUSE_OVER, [&]()->void
+	//{
+	//	m_pBackButton->setAlpha(128);
+	//});
 
-	m_pBackButton->addEventListener(MOUSE_OUT, [&]()->void
-	{
-		m_pBackButton->setAlpha(255);
-	});
-	addChild(m_pBackButton);
+	//m_pBackButton->addEventListener(MOUSE_OUT, [&]()->void
+	//{
+	//	m_pBackButton->setAlpha(255);
+	//});
+	//addChild(m_pBackButton);
 
-	// Next Button
-	m_pNextButton = new Button("../Assets/textures/nextButton.png", "nextButton", NEXT_BUTTON);
-	m_pNextButton->getTransform()->position = glm::vec2(500.0f, 400.0f);
-	m_pNextButton->addEventListener(CLICK, [&]()-> void
-	{
-		m_pNextButton->setActive(false);
-		TheGame::Instance()->changeSceneState(END_SCENE);
-	});
+	//// Next Button
+	//m_pNextButton = new Button("../Assets/textures/nextButton.png", "nextButton", NEXT_BUTTON);
+	//m_pNextButton->getTransform()->position = glm::vec2(500.0f, 400.0f);
+	//m_pNextButton->addEventListener(CLICK, [&]()-> void
+	//{
+	//	m_pNextButton->setActive(false);
+	//	TheGame::Instance()->changeSceneState(END_SCENE);
+	//});
 
-	m_pNextButton->addEventListener(MOUSE_OVER, [&]()->void
-	{
-		m_pNextButton->setAlpha(128);
-	});
+	//m_pNextButton->addEventListener(MOUSE_OVER, [&]()->void
+	//{
+	//	m_pNextButton->setAlpha(128);
+	//});
 
-	m_pNextButton->addEventListener(MOUSE_OUT, [&]()->void
-	{
-		m_pNextButton->setAlpha(255);
-	});
+	//m_pNextButton->addEventListener(MOUSE_OUT, [&]()->void
+	//{
+	//	m_pNextButton->setAlpha(255);
+	//});
 
-	addChild(m_pNextButton);
+	//addChild(m_pNextButton);
 
 	/* Instructions Label */
-	m_pInstructionsLabel = new Label("Press the backtick (`) character to toggle Debug View", "Consolas");
+	const SDL_Color blue = { 0, 0, 255, 255 };
+	m_pInstructionsLabel = new Label("Press the backtick (`) character to toggle Debug View", "Consolas", 20, blue);
 	m_pInstructionsLabel->getTransform()->position = glm::vec2(Config::SCREEN_WIDTH * 0.5f, 500.0f);
 
 	addChild(m_pInstructionsLabel);
@@ -193,28 +217,67 @@ void PlayScene::GUI_Function() const
 	// See examples by uncommenting the following - also look at imgui_demo.cpp in the IMGUI filter
 	//ImGui::ShowDemoWindow();
 	
-	ImGui::Begin("Your Window Title Goes Here", NULL, ImGuiWindowFlags_AlwaysAutoResize | ImGuiWindowFlags_MenuBar);
-
-	if(ImGui::Button("Throw"))
+	ImGui::Begin("Change Variables", NULL, ImGuiWindowFlags_AlwaysAutoResize | ImGuiWindowFlags_MenuBar);
+	if (!m_pBall->m_bThrow)
 	{
-		m_pBall->throwPos = m_pPlayer->getTransform()->position;
-		m_pBall->doThrow();
+		if (ImGui::Button("Throw"))
+		{
+			m_pBall->throwPos = m_pPlayer->getTransform()->position;
+			m_pBall->doThrow();
+			m_pBall->m_bThrow = true;
+		}
+		
 	}
-	
+	else
+		ImGui::Button("Wait");
 
 	
 
-	static float xPos = 400.0f;
-	if (ImGui::SliderFloat("EnemyDistance", &xPos, 485, Config::SCREEN_WIDTH)){
-		m_pPlaneSprite->getTransform()->position = glm::vec2(xPos, 300);
+	static float xPos = 485.0f;
+	if (ImGui::SliderFloat("EnemyDistance", &xPos, 200, Config::SCREEN_WIDTH) - m_pPlaneSprite->getWidth()/ 2){
+		m_pPlaneSprite->getTransform()->position = glm::vec2(xPos, 600.0f - 65 / 2);
 		
 	}
 	ImGui::Separator();
 	
-	static float xThrowSpeed = 0.0f;
-	if (ImGui::SliderFloat("Velocity", &xThrowSpeed, 0, 400)) {
-		m_pBall->throwSpeed.x = xThrowSpeed;
+	static float xThrowSpeed = 95.0f;
+	if (ImGui::SliderFloat("Velocity", &xThrowSpeed, 0, 800)) {
+		m_pBall->throwSpeed = xThrowSpeed;
 	}
+
+	static float angle = 15.0f;
+	if (ImGui::SliderFloat("Angle", &angle, 0, 90)) {
+		m_pBall->angle = angle;
+	}
+
+	static float mass = 2.2f;
+	if (ImGui::SliderFloat("Mass", &mass, 0, 100)) {
+		m_pBall->mass = mass;
+	}
+	static float gravity = m_pBall->gravity;
+	if (ImGui::SliderFloat("Gravity", &gravity, 5.0f, 20)) {
+		m_pBall->gravity = gravity;
+	}
+	double velx = m_pBall->getRigidBody()->velocity.x,
+		vely = m_pBall->getRigidBody()->velocity.y,
+		vel = Util::magnitude(m_pBall->getRigidBody()->velocity),
+		disx = m_pBall->getTransform()->position.x,
+		disy = m_pBall->getTransform()->position.y,
+		dis = m_pPlaneSprite->getDistance(m_pBall),
+		accx = m_pBall->getRigidBody()->acceleration.x,
+		accy = m_pBall->getRigidBody()->acceleration.y,
+		acc = Util::magnitude(m_pBall->getRigidBody()->acceleration),
+		force = m_pBall->m_force;
+		
+	ImGui::Text("Velocity on x-axis = %.2f m/s", velx);
+	ImGui::Text("Velocity on y-axis = %.2f m/s", -vely);
+	ImGui::Text("Velocity = %.2f m/s", vel);
+	ImGui::Text("Distance between ball and plane %.2f m", dis);
+	ImGui::Text("Acceleration on x-axis %.2f m/s?", accx);
+	ImGui::Text("Acceleration on y-axis %.2f m/s?", accy);
+	ImGui::Text("Acceleration %.2f m/s?", accy);
+	ImGui::Text("Force %.2f N", force);
+
 	/*static float xThrowSpeed = 0.0f;
 	if (ImGui::SliderFloat("Radian", &xThrowSpeed, 0, 400)) {
 		m_pBall->throwSpeed.x = xThrowSpeed;

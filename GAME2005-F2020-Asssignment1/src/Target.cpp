@@ -2,14 +2,15 @@
 #include "TextureManager.h"
 
 
+
 Target::Target()
 {
-	TextureManager::Instance()->load("../Assets/textures/Circle.png","circle");
+	TextureManager::Instance()->load("../Assets/textures/ball.png","circle");
 
 	const auto size = TextureManager::Instance()->getTextureSize("circle");
 	setWidth(size.x);
 	setHeight(size.y);
-	getTransform()->position = glm::vec2(26.5f, 300.0f);
+	getTransform()->position = glm::vec2(26.5f, 600.0f - 58 / 2);
 	getRigidBody()->velocity = glm::vec2(0, 0);
 	getRigidBody()->isColliding = false;
 
@@ -32,8 +33,17 @@ void Target::draw()
 
 void Target::update()
 {
-	m_move();
-	m_checkBounds();
+	if (m_bThrow)
+	{
+		if (getRigidBody()->isColliding)
+		{
+			reset();
+		
+		}
+		m_move();
+		m_checkBounds();
+	}
+	force();
 }
 
 void Target::clean()
@@ -42,28 +52,42 @@ void Target::clean()
 
 void Target::doThrow()
 {
-	getRigidBody()->acceleration += glm::vec2(0, 9.8f);//external forces, gravity
+	getRigidBody()->acceleration += glm::vec2(0.0f, gravity);
 	getTransform()->position = throwPos;
-	getRigidBody()->velocity = throwSpeed;
+	getRigidBody()->velocity.x += throwSpeed * cos(angle * (3.14f/180));
+	getRigidBody()->velocity.y += -throwSpeed * sin(angle * (3.14f / 180));
 }
 
 void Target::reset()
 {
-	getTransform()->position = glm::vec2(26.5f, 300.0f);
-	getRigidBody()->velocity = glm::vec2(0, 0);
+
+	getTransform()->position = glm::vec2(26.5f, 600.0f - 58 / 2);
+	getRigidBody()->acceleration = glm::vec2(0.0f, 0.0f);
+	getRigidBody()->velocity = glm::vec2(0.0f, 0.0f);
+	getRigidBody()->isColliding = false;
+	m_bThrow = false;
+}
+
+void Target::force()
+{
+	m_force = sqrt(Util::magnitude(getRigidBody()->acceleration) * mass);
 }
 
 void Target::m_move()
 {
 	float deltaTime = 1.0f / 60.0f;
 	float pixelPerMeter = 1.0f;
-	
-	getRigidBody()->velocity += getRigidBody()->acceleration * deltaTime;
+	getRigidBody()->velocity += getRigidBody()->acceleration  * deltaTime;
 	getTransform()->position += getRigidBody()->velocity * deltaTime * pixelPerMeter;
+	std::cout << cos(angle * (3.14f / 180)) << "  " << sin(angle * (3.14f / 180)) << std::endl;
 }
 
 void Target::m_checkBounds()
 {
+	if (getTransform()->position.x > 1010 || getTransform()->position.y > 600 - getWidth() / 2 )
+	{
+		getRigidBody()->isColliding = true;
+	}
 }
 
 void Target::m_reset()
