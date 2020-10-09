@@ -42,6 +42,8 @@ void Target::update()
 		}
 		m_move();
 		m_checkBounds();
+		if (m_maxdis < -1 * (this->getTransform()->position.y - Config::SCREEN_HEIGHT))
+			m_maxdis = -1 * (this->getTransform()->position.y - Config::SCREEN_HEIGHT) ;
 	}
 	force();
 }

@@ -211,6 +211,18 @@ void PlayScene::start()
 
 void PlayScene::GUI_Function() const
 {
+	double velx = m_pBall->getRigidBody()->velocity.x,
+		vely = m_pBall->getRigidBody()->velocity.y,
+		vel = Util::magnitude(m_pBall->getRigidBody()->velocity),
+		disx = m_pBall->getTransform()->position.x,
+		disy = m_pBall->getTransform()->position.y,
+		dis = m_pPlaneSprite->getDistance(m_pBall),
+		maxdis = m_pBall->m_maxdis,
+		accx = m_pBall->getRigidBody()->acceleration.x,
+		accy = m_pBall->getRigidBody()->acceleration.y,
+		acc = Util::magnitude(m_pBall->getRigidBody()->acceleration),
+		force = m_pBall->m_force;
+	
 	// Always open with a NewFrame
 	ImGui::NewFrame();
 
@@ -225,13 +237,14 @@ void PlayScene::GUI_Function() const
 			m_pBall->throwPos = m_pPlayer->getTransform()->position;
 			m_pBall->doThrow();
 			m_pBall->m_bThrow = true;
+			m_pBall->m_maxdis = 0;
+			maxdis = 0;
 		}
 		
 	}
 	else
 		ImGui::Button("Wait");
 
-	
 
 	static float xPos = 485.0f;
 	if (ImGui::SliderFloat("EnemyDistance", &xPos, 200, Config::SCREEN_WIDTH) - m_pPlaneSprite->getWidth()/ 2){
@@ -258,23 +271,15 @@ void PlayScene::GUI_Function() const
 	if (ImGui::SliderFloat("Gravity", &gravity, 5.0f, 20)) {
 		m_pBall->gravity = gravity;
 	}
-	double velx = m_pBall->getRigidBody()->velocity.x,
-		vely = m_pBall->getRigidBody()->velocity.y,
-		vel = Util::magnitude(m_pBall->getRigidBody()->velocity),
-		disx = m_pBall->getTransform()->position.x,
-		disy = m_pBall->getTransform()->position.y,
-		dis = m_pPlaneSprite->getDistance(m_pBall),
-		accx = m_pBall->getRigidBody()->acceleration.x,
-		accy = m_pBall->getRigidBody()->acceleration.y,
-		acc = Util::magnitude(m_pBall->getRigidBody()->acceleration),
-		force = m_pBall->m_force;
+	
 		
 	ImGui::Text("Velocity on x-axis = %.2f m/s", velx);
 	ImGui::Text("Velocity on y-axis = %.2f m/s", -vely);
 	ImGui::Text("Velocity = %.2f m/s", vel);
-	ImGui::Text("Distance between ball and plane %.2f m", dis);
-	ImGui::Text("Acceleration on x-axis %.2f m/s?", accx);
-	ImGui::Text("Acceleration on y-axis %.2f m/s?", accy);
+	ImGui::Text("Distance between TD and ST %.2f m", dis);
+	ImGui::Text("Maximum height of projectile %.2f m", maxdis);
+	ImGui::Text("Acceleration on x-axis %.2f m/s²", accx);
+	ImGui::Text("Acceleration on y-axis %.2f m/s²", accy);
 	ImGui::Text("Acceleration %.2f m/s?", accy);
 	ImGui::Text("Force %.2f N", force);
 
